@@ -57,17 +57,25 @@ export default function Home() {
   useEffect(() => {
     if (todoItems.length > 0)
       localStorage.setItem('todoItems', JSON.stringify(todoItems));
+    else {
+      localStorage.removeItem('todoItems');
+    }
+
+    const totalItems = todoItems.length;
+    const completedCount = todoItems.filter((item) => item.checked).length;
+    const percentage = totalItems > 0 ? (completedCount / totalItems) * 100 : 0;
+    setScore(percentage);
   }, [todoItems]);
+
+  const handleDelete = (index: any) => {
+    setTodoItems((prevValue) => prevValue.filter((_, i) => i !== index));
+  };
 
   const handleCheck = (index: any) => {
     const newItems = [...todoItems];
     newItems[index].checked = !newItems[index].checked;
     setTodoItems(newItems);
     setScore(score);
-  };
-
-  const handleDelete = (index: any) => {
-    setTodoItems((prevValue) => prevValue.filter((_, i) => i !== index));
   };
 
   const handleChangeTodo = (event: any) => {
@@ -132,6 +140,7 @@ export default function Home() {
                     key={index}
                     control={
                       <Checkbox
+                        checked={item.checked}
                         sx={{
                           color: pink[800],
                           '&.Mui-checked': {
