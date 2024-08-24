@@ -78,6 +78,13 @@ export default function Home() {
     setScore(score);
   };
 
+  const handleClearChecks = () => {
+    const updatedItems = todoItems.map((item) =>
+      item.checked ? { ...item, checked: false } : item
+    );
+    setTodoItems(updatedItems);
+  };
+
   const handleChangeTodo = (event: any) => {
     setNewTodo({
       ...newTodo,
@@ -127,7 +134,7 @@ export default function Home() {
             }}
           >
             <Typography>My Daily Todo Task</Typography>
-            <Typography>{`Score ${score} %`}</Typography>
+            <Typography>{`Score ${score.toFixed(2)} %`}</Typography>
           </Box>
           <FormGroup>
             {todoItems.map((item, index) => {
@@ -171,17 +178,31 @@ export default function Home() {
               );
             })}
           </FormGroup>
-          <Button
-            onClick={handleOpenModal}
-            variant="outlined"
-            startIcon={<AddIcon />}
+          <Box
             sx={{
-              width: '80%',
-              margin: '0 auto',
+              display: 'flex',
+              gap: '5px',
             }}
           >
-            Add Todo
-          </Button>
+            <Button
+              onClick={handleOpenModal}
+              variant="outlined"
+              startIcon={<AddIcon />}
+              sx={{ width: '50%' }}
+            >
+              Add Todo
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              disabled={score <= 0}
+              onClick={handleClearChecks}
+              sx={{ width: '50%' }}
+            >
+              Clear Checks
+            </Button>
+          </Box>
+
           <Modal
             open={open}
             onClose={handleCloseModal}
